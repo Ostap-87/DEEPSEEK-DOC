@@ -94,6 +94,11 @@ ol.b li::marker{color:#1A73E8; font-weight:700; font-size:9.6pt}
 /* ---------- table ---------- */
 table{width:100%; border-collapse:collapse; font-size:7.6pt; margin:0 0 3mm}
 table.dense{font-size:6.9pt}
+.duo{display:flex; gap:6mm; align-items:flex-start; margin-bottom:2mm}
+.duo>div{flex:1; min-width:0}
+.duo table{margin:0; font-size:6.2pt}
+.duo tbody td{padding:.82mm 1.5mm; line-height:1.22}
+.duo thead th{padding:1.4mm 1.6mm; font-size:6.2pt}
 table.dense tbody td{padding:1.25mm 1.9mm; line-height:1.28}
 table.dense thead th{padding:1.5mm 1.9mm; font-size:6.4pt}
 thead th{
@@ -138,7 +143,8 @@ tbody td.name{font-weight:600; color:#0E1A26}
 .cov-deck{position:absolute; left:15mm; width:134mm;
   font-size:10.6pt; line-height:1.5; color:#CFDCEC; text-align:left; hyphens:none}
 .cov-stats{position:absolute; left:15mm; right:15mm; bottom:36mm; display:flex; gap:12mm}
-.cov-stat .n{font-family:Oswald,sans-serif; font-weight:700; font-size:23pt; line-height:1; color:#fff}
+.cov-stat .n{font-family:Oswald,sans-serif; font-weight:700; font-size:22pt; line-height:1; color:#fff;
+  white-space:nowrap}
 .cov-stat .l{font-size:6.9pt; line-height:1.35; color:#93A6BD; margin-top:2mm; max-width:34mm}
 .cov-foot{position:absolute; left:15mm; right:15mm; bottom:12mm; display:flex; justify-content:space-between;
   border-top:.5pt solid rgba(255,255,255,.22); padding-top:3mm;
@@ -202,6 +208,22 @@ def blocks(items):
                 rows.append("<tr>" + "".join(tds) + "</tr>")
             cls = ' class="dense"' if b.get("dense") else ""
             out.append(f'<table{cls}><thead><tr>{head}</tr></thead><tbody>{"".join(rows)}</tbody></table>')
+        elif t == "table2":
+            def render_one(spec):
+                head = "".join(f"<th>{h}</th>" for h in spec["head"])
+                rows = []
+                for r in spec["rows"]:
+                    tds = []
+                    for i, c in enumerate(r):
+                        cls = ""
+                        if spec.get("cls") and i < len(spec["cls"]) and spec["cls"][i]:
+                            cls = f' class="{spec["cls"][i]}"'
+                        tds.append(f"<td{cls}>{c}</td>")
+                    rows.append("<tr>" + "".join(tds) + "</tr>")
+                return f'<table class="dense">{("<thead><tr>" + head + "</tr></thead>")}<tbody>{"".join(rows)}</tbody></table>'
+            out.append('<div class="duo">'
+                       f'<div>{render_one(b["left"])}</div>'
+                       f'<div>{render_one(b["right"])}</div></div>')
         elif t == "raw":
             out.append(b["x"])
     return "\n".join(out)

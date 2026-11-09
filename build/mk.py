@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.join(ROOT, "reports"))
 import r_lib
 
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-PY = sys.executable
+PY = os.path.join(ROOT, "work", "venv", "bin", "python")
 
 
 def render_pdf(html, pdf):
