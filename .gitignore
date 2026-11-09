@@ -1,0 +1,11 @@
+# --- служебное ---
+.DS_Store
+work/
+ref/
+build/*.html
+build/prev_*/
+*.tmp
+
+# --- промежуточные рендеры ---
+img/check/
+out/*.tmp.pdf
